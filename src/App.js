@@ -3,24 +3,19 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const isDowloaded = window.matchMedia('(display-mode: standalone)').matches;
+
+  if (isDowloaded) {
+    return (
+      <div className="App">
+        <header className="App-header">
+          NEAT Vaping Lab!
+        </header>
+      </div>
+    );
+  } else {
+    return <h1>Add to homescreen!</h1>
+  }
 }
 
 export default App;
