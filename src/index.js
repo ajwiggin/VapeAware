@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import './index.css';
 import App from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
-import useMediaQuery from './useMediaQuery'
+
+import * as serviceWorkerRegistration from './server/serviceWorkerRegistration';
+import reportWebVitals from './server/reportWebVitals';
+import useMediaQuery from './server/useMediaQuery';
 
 ReactDOM.render(
   <React.StrictMode>
