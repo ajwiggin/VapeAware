@@ -3,6 +3,7 @@
     "name": "VapeAware",
     "slug": "VapeAware",
     "version": "1.0.0",
+    "owner": "ajwiggin",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
