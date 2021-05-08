@@ -1,5 +1,6 @@
 import Firebase from 'firebase/app';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 
 const firebaseConfig = {
     apiKey: process.env.APIKEY,
@@ -83,6 +84,31 @@ export const local = {
     }
 };
 
-const Storage = { firebase, local };
+export const secure = {
+
+    /**
+     * Gets a value stored at the given key in secure storage
+     * @param {string} key The location to search for the value
+     * @returns {Promise<string>} The value or null if the key/value pair does not exist
+     */
+    read: async key => await SecureStore.getItemAsync(key),
+
+    /**
+     * Stores a string in secure storage
+     * @param {string} key The location to search for the value
+     * @param {string} val The value to store at the key
+     * @returns {Promise<void>}
+     */
+    write: async (key, val) => await SecureStore.setItemAsync(key, val),
+
+    /**
+     * Checks to see if SecureStorage is available
+     * @returns {boolean} Whether or not SecureStore is available on the device
+     */
+    isAvailable: async () => await SecureStore.isAvailableAsync()
+
+};
+
+const Storage = { firebase, local, secure };
 
 export default Storage;

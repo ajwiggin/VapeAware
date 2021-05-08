@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { v4 as uuid } from 'uuid';
 
 import Storage from './src/storage';
 import { PAGES, LOCATIONS } from './src/constants';
@@ -26,11 +27,22 @@ class App extends Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         Storage.local.read(LOCATIONS.HASVISITED)
             .then(hasVisited => {
                 this.setHasVisited(hasVisited || false);
             });
+        let uniqueID = await Storage.secure.read(LOCATIONS.UNIQUEID) || await Storage.local.read(LOCATIONS.UNIQUEID);
+        if (!uniqueID) {
+            uniqueID = uuid();
+            Storage.secure.isAvailable()
+                .then(available => {
+                    if (available) Storage.secure.write(LOCATIONS.UNIQUEID, uniqueID);
+                    else Storage.local.write(LOCATIONS.UNIQUEID, uniqueID);
+                });
+        }
+        console.log(uniqueID);
+        this.setState({ uniqueID });
     }
 
     setHasVisited = (hasVisited) => this.setState({ hasVisited });

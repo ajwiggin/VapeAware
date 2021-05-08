@@ -3,7 +3,8 @@ export const LOCATIONS = {
     HASVISITED: 'hasVisited',
     PUSHTOKEN: 'pushToken',
     SURVEYREMIDNER: 'surveyReminder',
-    LOCATIONACCESS: 'locationAccess'
+    LOCATIONACCESS: 'locationAccess',
+    UNIQUEID: 'uniqueId'
 };
 
 export const PAGES = {
