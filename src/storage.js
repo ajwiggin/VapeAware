@@ -71,7 +71,7 @@ export const local = {
 
     /**
      * Removes a key/value pair in local storage
-     * @param {string|[string]} key Location(s) at which to remove the key/value pairs
+     * @param {string|[string]} keys Location(s) at which to remove the key/value pairs
      */
     remove: async (keys) => {
         try {

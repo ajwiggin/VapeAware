@@ -2,6 +2,7 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import Storage from './storage';
+import { LOCATIONS } from './constants';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -18,7 +19,7 @@ Notifications.setNotificationHandler({
  * @param {{}} [data={}] Data to pass to the app when opening the push notification
  */
 export async function send(title, body, data={}) {
-    let expoPushToken = await Storage.local.read('pushToken');
+    let expoPushToken = await Storage.local.read(LOCATIONS.PUSHTOKEN);
     
     if (!expoPushToken) {
         expoPushToken = await register();
@@ -61,7 +62,7 @@ export async function register() {
             return;
         }
         token = (await Notifications.getExpoPushTokenAsync()).data;
-        Storage.local.write('pushToken', token);
+        Storage.local.write(LOCATIONS.PUSHTOKEN, token);
     } else {
         console.log('Must use physical device for Push Notifications');
     }
