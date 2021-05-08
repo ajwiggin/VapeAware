@@ -1,43 +1,45 @@
 import Firebase from 'firebase/app';
+import 'firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 
 const firebaseConfig = {
     apiKey: process.env.APIKEY,
     authDomain: process.env.AUTHDOMAIN,
-    databaseURL: process.env.DATABASEURL,
+    databaseURL: 'https://vapeawaretesting-default-rtdb.firebaseio.com',
     projectId: process.env.PROJECTID,
     storageBucket: process.env.BUCKET,
     messagingSenderId: process.env.SENDERID,
     appId: process.env.APPID,
-    measurementId: process.env.MEASUREMENTID,
+    measurementId: process.env.MEAUREMENTID
 };
 
-Firebase.initializeApp(firebaseConfig);
+if (!Firebase.apps.length) Firebase.initializeApp(firebaseConfig);
 
-export const firebase = {
+/**
+ * @param {string} uniqueID The participant's UUID
+ */
+export const firebase = uniqueID => ({
+    uniqueID,
+
     /**
-     * Retrieves firebase data at specified location
-     * ! This method attaches a listener to the database at the specified ref and should not be used as-written
-     * @param {string} [ref='/'] Data reference location
-     * @returns Data json from firebase
+     * Stores session data under the participant's UUID, date, and sessions
+     * @param {{}} data Data to store
      */
-    read: async (ref = '/') => {
-        return Firebase.database().ref(ref)
-            .on('value', snapshot => snapshot.val());
+    recordSession: async data => {
+        const today = new Date().toDateString();
+        (await Firebase.database().ref(`${uniqueID}/${today}/sessions`).push()).set(data);
     },
 
     /**
-     * Writes an object to firebase. If null is passed in, the data at the specified location will be removed
-     * @param {string} ref Data reference location
-     * @param {?{}} data JSON data to write
+     * Stores session data under the participant's UUID, date, and survey
+     * @param {{}} data Data to store
      */
-    write: async (ref = '/', data) => {
-        Firebase.database().ref(ref).set(data)
-            .then(() => console.log(`Data written to ref '${ref}'`))
-            .catch(() => console.error(`Data write failed to ref '${ref}'`));
+    recordSurvey: async data => {
+        const today = new Date().toDateString();
+        (await Firebase.database().ref(`${uniqueID}/${today}/surveys`).push()).set(data);
     }
-};
+});
 
 export const local = {
     /**
