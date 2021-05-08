@@ -19,11 +19,7 @@ Notifications.setNotificationHandler({
  * @param {{}} [data={}] Data to pass to the app when opening the push notification
  */
 export async function send(title, body, data={}) {
-    let expoPushToken = await Storage.local.read(LOCATIONS.PUSHTOKEN);
-    
-    if (!expoPushToken) {
-        expoPushToken = await register();
-    }
+    let expoPushToken = await Storage.local.read(LOCATIONS.PUSHTOKEN) || await register();
 
     const message = {
         to: expoPushToken,
@@ -79,4 +75,12 @@ export async function register() {
     return token;
 }
 
-export default { register, send };
+export function addListener(cb) {
+    Notifications.addNotificationResponseReceivedListener(cb);
+}
+
+export function removeListener(listener) {
+    Notifications.removeNotificationSubscription(listener);
+}
+
+export default { register, send, addListener, removeListener };

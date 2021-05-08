@@ -4,11 +4,13 @@ export const LOCATIONS = {
     PUSHTOKEN: 'pushToken',
     SURVEYREMIDNER: 'surveyReminder',
     LOCATIONACCESS: 'locationAccess',
-    UNIQUEID: 'uniqueId'
+    UNIQUEID: 'vapeAwareUniqueID',
+    DAILYSURVEY: 'dailySurvey'
 };
 
 export const PAGES = {
     HOME: Symbol('home'),
     RECORDSESSION: Symbol('recordsession'),
-    SETTINGS: Symbol('settings')
+    SETTINGS: Symbol('settings'),
+    DAILYSURVEY: Symbol('dailysurvey')
 };
