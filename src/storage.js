@@ -93,7 +93,11 @@ export const secure = {
      * @param {string} key The location to search for the value
      * @returns {Promise<string>} The value or null if the key/value pair does not exist
      */
-    read: async key => await SecureStore.getItemAsync(key),
+    read: async key => {
+        // if (!secure.isAvailable()) return null;
+        return await SecureStore.getItemAsync(key)
+            .catch(e => console.error(e));
+    },
 
     /**
      * Stores a string in secure storage
@@ -101,7 +105,10 @@ export const secure = {
      * @param {string} val The value to store at the key
      * @returns {Promise<void>}
      */
-    write: async (key, val) => await SecureStore.setItemAsync(key, val),
+    write: async (key, val) => {
+        return await SecureStore.setItemAsync(key, val)
+            .catch(e => console.error(e));
+    },
 
     /**
      * Checks to see if SecureStorage is available
