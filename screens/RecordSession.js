@@ -59,12 +59,13 @@ class RecordSession extends Component {
         if (this.state.showSurvey) {
             return (
                 <View>
+                    <Text>Optional Survey</Text>
                     <Button
-                        title='Skip'
+                        title="Skip"
                         onPress={this.onSubmit}
                     />
                     <Button
-                        title='Submit'
+                        title="Submit"
                         onPress={this.onSubmit}
                     />
                 </View>
@@ -85,21 +86,21 @@ class RecordSession extends Component {
                             selectedValue={this.state.when}
                             onValueChange={this.onWhenChange}
                         >
-                            <Picker.Item label='Select one' value='default' />
-                            <Picker.Item label='Morning' value='morning' />
-                            <Picker.Item label='Afternoon' value='afternoon' />
-                            <Picker.Item label='Night' value='night' />
+                            <Picker.Item label="Select one" value="default" />
+                            <Picker.Item label="Morning" value="morning" />
+                            <Picker.Item label="Afternoon" value="afternoon" />
+                            <Picker.Item label="Night" value="night" />
                         </Picker>
                         <Text>Where were you when the event occured?</Text>
                         <Picker
                             selectedValue={this.state.where}
                             onValueChange={this.onWhereChange}
                         >
-                            <Picker.Item label='Select one' value='default' />
-                            <Picker.Item label='Home' value='home' />
-                            <Picker.Item label='School' value='school' />
-                            <Picker.Item label='Work' value='work' />
-                            <Picker.Item label='Other' value='other' />
+                            <Picker.Item label="Select one" value="default" />
+                            <Picker.Item label="Home" value="home" />
+                            <Picker.Item label="School" value="school" />
+                            <Picker.Item label="Work" value="work" />
+                            <Picker.Item label="Other" value="other" />
                         </Picker>
                     </View>
                 }

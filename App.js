@@ -6,15 +6,10 @@ import { v4 as uuid } from 'uuid';
 import Storage from './src/storage';
 import { PAGES, LOCATIONS } from './src/constants';
 
-// import TestDataCollection from './src/testDataCollection';
-
 import Landing from './screens/Landing';
 import Home from './screens/Home';
 import RecordSession from './screens/RecordSession';
 import Settings from './screens/Settings';
-
-const defaultTime = new Date();
-defaultTime.setHours(18, 0, 0, 0);
 
 class App extends Component {
     constructor(props) {
