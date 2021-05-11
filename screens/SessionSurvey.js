@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
-import { ButtonGroup, Button } from 'react-native-elements';
+import { ButtonGroup, Button, Text } from 'react-native-elements';
+import PageWrapper from './PageWrapper';
 
 class SessionSurvey extends Component {
     constructor(props) {
@@ -28,8 +28,7 @@ class SessionSurvey extends Component {
 
     render() {
         return (
-            <View>
-                <Text>Optional Survey</Text>
+            <PageWrapper title="Optional Survey">
                 <Text>How do you feel?</Text>
                 <SelectableButton title="Happy" onClick={this.feelingChange} />
                 <SelectableButton title="Sad" onClick={this.feelingChange} />
@@ -67,7 +66,7 @@ class SessionSurvey extends Component {
                     title="Submit"
                     onPress={() => this.props.onSubmit(this.state)}
                 />
-            </View>
+            </PageWrapper>
         );
     }
 }
