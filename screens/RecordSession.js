@@ -38,6 +38,7 @@ class RecordSession extends Component {
     onSurveySubmit = survey => {
         let data = this.state;
         delete data.showSurvey;
+        delete data.modalVisible;
 
         data.when = this.whenButtons[data.when];
         data.where = this.whereButtons[data.where];
