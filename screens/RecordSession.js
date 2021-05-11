@@ -7,6 +7,7 @@ import PageWrapper from './PageWrapper';
 import Storage from '../src/storage';
 import { LOCATIONS } from '../src/constants';
 import Location from '../src/location';
+import SessionSurvey from './SessionSurvey';
 
 class RecordSession extends Component {
     constructor(props) {
@@ -28,18 +29,21 @@ class RecordSession extends Component {
     isCurrentToggle = () => this.setState({ isCurrent: !this.state.isCurrent })
 
     onContinue = async () => {
-        this.setState({ showSurvey: true });
-    }
-
-    onSubmit = () => {
         if (!this.state.isCurrent && (this.state.when === 'default' || this.state.where === 'default')) {
             // TODO: Error, user must select a value!
             console.log('TODO: You must select a value!');
             return;
         }
+        this.setState({ showSurvey: true });
+    };
+
+    onSurveySubmit = survey => {
         let data = this.state;
         delete data.showSurvey;
-        if (this.state.isCurrent) {
+
+        if (survey) data.survey = survey;
+
+        if (data.isCurrent) {
             Location.getCurrentPosition()
                 .then(location => {
                     data.when = new Date().toTimeString();
@@ -49,8 +53,9 @@ class RecordSession extends Component {
             this.props.setPage.home();
             return;
         }
-        // const data = this.state;
+
         this.firebase.recordSession(data);
+
         this.props.setPage.home();
     }
 
@@ -60,19 +65,7 @@ class RecordSession extends Component {
 
     render() {
         if (this.state.showSurvey) {
-            return (
-                <View>
-                    <Text>Optional Survey</Text>
-                    <Button
-                        title="Skip"
-                        onPress={this.onSubmit}
-                    />
-                    <Button
-                        title="Submit"
-                        onPress={this.onSubmit}
-                    />
-                </View>
-            );
+            return <SessionSurvey onSubmit={this.onSurveySubmit} />;
         }
         return (
             <PageWrapper title="Record Session">
