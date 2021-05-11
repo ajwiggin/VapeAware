@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import { View, Switch, Modal, StyleSheet } from 'react-native';
+import { View, Switch, StyleSheet } from 'react-native';
 import { Button, Text, ButtonGroup } from 'react-native-elements';
+import Modal from 'react-native-modal';
 
 import PageWrapper from './PageWrapper';
 import Storage from '../src/storage';
 import { LOCATIONS } from '../src/constants';
 import Location from '../src/location';
 import SessionSurvey from './SessionSurvey';
-import { TouchableOpacity } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native';
-import { ScrollView } from 'react-native';
 
 class RecordSession extends Component {
     constructor(props) {
@@ -30,9 +28,8 @@ class RecordSession extends Component {
     }
 
     onContinue = async () => {
-        if (!this.state.isCurrent && (this.state.when === 'default' || this.state.where === 'default')) {
-            // TODO: Error, user must select a value!
-            console.log('TODO: You must select a value!');
+        if (!this.state.isCurrent && !(this.state.when && this.state.where)) {
+            this.setState({ modalVisible: true });
             return;
         }
         this.setState({ showSurvey: true });
@@ -78,13 +75,20 @@ class RecordSession extends Component {
                     onValueChange={() => this.setState({ isCurrent: !this.state.isCurrent })}
                 />
                 <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={this.state.modalVisible}
+                    isVisible={this.state.modalVisible}
+                    style={styles.modalContainer}
+                    backdropOpacity={0}
+                    onBackdropPress={() => this.setState({ modalVisible: false })}
+                    swipeDirection={['down', 'up']}
+                    onSwipeComplete={() => this.setState({ modalVisible: false })}
+                >
+                    <View style={styles.modal}>
+                        <Text>Please answer all required questions before saving the session</Text>
+                    </View>
+                </Modal>
                 {!this.state.isCurrent &&
                     <View>
                         <Text>What time did this event occur?</Text>
-                        <Picker
                         <ButtonGroup
                             onPress={when => this.setState({ when })}
                             selectedIndex={this.state.when}
@@ -115,4 +119,24 @@ class RecordSession extends Component {
 const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modal: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+});
+
 export default RecordSession;
