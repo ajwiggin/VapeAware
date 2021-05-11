@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, Switch } from 'react-native';
-import { Button, Text } from 'react-native-elements';
-import { Picker } from '@react-native-picker/picker';
+import { View, Switch, StyleSheet } from 'react-native';
+import { Button, Text, ButtonGroup } from 'react-native-elements';
+import Modal from 'react-native-modal';
 
 import PageWrapper from './PageWrapper';
 import Storage from '../src/storage';
@@ -14,9 +14,10 @@ class RecordSession extends Component {
         super(props);
         this.state = {
             isCurrent: true,
-            when: 'default',
-            where: 'default',
+            when: null,
+            where: null,
             survey: null,
+            modalVisible: false,
             showSurvey: false
         };
     }
@@ -26,12 +27,9 @@ class RecordSession extends Component {
         this.firebase = Storage.firebase(uniqueID);
     }
 
-    isCurrentToggle = () => this.setState({ isCurrent: !this.state.isCurrent })
-
     onContinue = async () => {
-        if (!this.state.isCurrent && (this.state.when === 'default' || this.state.where === 'default')) {
-            // TODO: Error, user must select a value!
-            console.log('TODO: You must select a value!');
+        if (!this.state.isCurrent && !(this.state.when && this.state.where)) {
+            this.setState({ modalVisible: true });
             return;
         }
         this.setState({ showSurvey: true });
@@ -40,6 +38,10 @@ class RecordSession extends Component {
     onSurveySubmit = survey => {
         let data = this.state;
         delete data.showSurvey;
+        delete data.modalVisible;
+
+        data.when = this.whenButtons[data.when];
+        data.where = this.whereButtons[data.where];
 
         if (survey) data.survey = survey;
 
@@ -59,9 +61,8 @@ class RecordSession extends Component {
         this.props.setPage.home();
     }
 
-    onWhenChange = (when) => this.setState({ when })
-
-    onWhereChange = (where) => this.setState({ where })
+    whenButtons = ['Morning', 'Afternoon', 'Night']
+    whereButtons = ['Home', 'School', 'Work', 'Other']
 
     render() {
         if (this.state.showSurvey) {
@@ -72,31 +73,34 @@ class RecordSession extends Component {
                 <Text>Is this happening currently?</Text>
                 <Switch
                     value={this.state.isCurrent}
-                    onValueChange={this.isCurrentToggle}
+                    onValueChange={() => this.setState({ isCurrent: !this.state.isCurrent })}
                 />
+                <Modal
+                    isVisible={this.state.modalVisible}
+                    style={styles.modalContainer}
+                    backdropOpacity={0}
+                    onBackdropPress={() => this.setState({ modalVisible: false })}
+                    swipeDirection={['down', 'up']}
+                    onSwipeComplete={() => this.setState({ modalVisible: false })}
+                >
+                    <View style={styles.modal}>
+                        <Text>Please answer all required questions before saving the session</Text>
+                    </View>
+                </Modal>
                 {!this.state.isCurrent &&
                     <View>
                         <Text>What time did this event occur?</Text>
-                        <Picker
-                            selectedValue={this.state.when}
-                            onValueChange={this.onWhenChange}
-                        >
-                            <Picker.Item label="Select one" value="default" />
-                            <Picker.Item label="Morning" value="morning" />
-                            <Picker.Item label="Afternoon" value="afternoon" />
-                            <Picker.Item label="Night" value="night" />
-                        </Picker>
+                        <ButtonGroup
+                            onPress={when => this.setState({ when })}
+                            selectedIndex={this.state.when}
+                            buttons={this.whenButtons}
+                        />
                         <Text>Where were you when the event occured?</Text>
-                        <Picker
-                            selectedValue={this.state.where}
-                            onValueChange={this.onWhereChange}
-                        >
-                            <Picker.Item label="Select one" value="default" />
-                            <Picker.Item label="Home" value="home" />
-                            <Picker.Item label="School" value="school" />
-                            <Picker.Item label="Work" value="work" />
-                            <Picker.Item label="Other" value="other" />
-                        </Picker>
+                        <ButtonGroup
+                            onPress={where => this.setState({ where })}
+                            selectedIndex={this.state.where}
+                            buttons={this.whereButtons}
+                        />
                     </View>
                 }
                 <Button
@@ -111,5 +115,29 @@ class RecordSession extends Component {
         );
     }
 }
+
+/* eslint-disable react-native/no-color-literals */
+const styles = StyleSheet.create({
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modal: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+});
 
 export default RecordSession;

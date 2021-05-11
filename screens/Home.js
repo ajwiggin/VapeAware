@@ -5,7 +5,7 @@ import PageWrapper from './PageWrapper';
 
 function Home(props) {
     return (
-        <PageWrapper title="Home">
+        <PageWrapper>
             <Button
                 title="Record Session"
                 onPress={props.setPage.recordSession}
