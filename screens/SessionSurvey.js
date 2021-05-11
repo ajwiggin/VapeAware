@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { ButtonGroup, Button, Text } from 'react-native-elements';
+import { ButtonGroup, Button, Text, Chip } from 'react-native-elements';
 import PageWrapper from './PageWrapper';
 
 class SessionSurvey extends Component {
@@ -20,11 +20,17 @@ class SessionSurvey extends Component {
         });
     }
 
-    aloneChange = alone => this.setState({ alone });
+    onComplete = sendSurvey => {
+        if (!sendSurvey) {
+            this.props.onSubmit();
+            return;
+        }
+        const survey = this.state;
+        survey.alone = this.aloneButtons[survey.alone];
+        this.props.onSubmit(survey);
+    }
 
-    stressChange = stressLevel => this.setState({ stressLevel });
-
-    CreateButton = val => () => <Text>{val}</Text>;
+    aloneButtons = ['Alone', 'With Others']
 
     render() {
         return (
@@ -32,39 +38,35 @@ class SessionSurvey extends Component {
                 <Text>How do you feel?</Text>
                 <SelectableButton title="Happy" onClick={this.feelingChange} />
                 <SelectableButton title="Sad" onClick={this.feelingChange} />
-                <SelectableButton title="Mad" onClick={this.feelingChange} />
+                <SelectableButton title="Angry" onClick={this.feelingChange} />
+                <SelectableButton title="Excited" onClick={this.feelingChange} />
+                <SelectableButton title="Confident" onClick={this.feelingChange} />
+                <SelectableButton title="Jealous" onClick={this.feelingChange} />
+                <SelectableButton title="Guilty" onClick={this.feelingChange} />
+                <SelectableButton title="Proud" onClick={this.feelingChange} />
+                <SelectableButton title="Annoyed" onClick={this.feelingChange} />
 
                 <Text>What is your current stress level?</Text>
                 <ButtonGroup
-                    onPress={this.stressChange}
+                    onPress={stressLevel => this.setState({ stressLevel })}
                     selectedIndex={this.state.stressLevel}
-                    buttons={[
-                        { element: this.CreateButton(0) },
-                        { element: this.CreateButton(1) },
-                        { element: this.CreateButton(2) },
-                        { element: this.CreateButton(3) },
-                        { element: this.CreateButton(4) },
-                        { element: this.CreateButton(5) }
-                    ]}
+                    buttons={[0, 1, 2, 3, 4, 5]}
                 />
 
                 <Text>Are you alone or with others?</Text>
                 <ButtonGroup
-                    onPress={this.aloneChange}
+                    onPress={alone => this.setState({ alone })}
                     selectedIndex={this.state.alone}
-                    buttons={[
-                        { element: this.CreateButton('Alone') },
-                        { element: this.CreateButton('With Others') }
-                    ]}
+                    buttons={this.aloneButtons}
                 />
 
                 <Button
                     title="Skip"
-                    onPress={() => this.props.onSubmit()}
+                    onPress={() => this.onComplete(false)}
                 />
                 <Button
                     title="Submit"
-                    onPress={() => this.props.onSubmit(this.state)}
+                    onPress={() => this.onComplete(true)}
                 />
             </PageWrapper>
         );
@@ -81,7 +83,7 @@ function SelectableButton(props) {
 
     const onPress = () => setPressed(!pressed);
 
-    return <Button onPress={onPress} type={pressed ? 'solid' : 'outline'} {...props} />;
+    return <Chip onPress={onPress} type={pressed ? 'solid' : 'outline'} {...props} />;
 }
 
 export default SessionSurvey;
