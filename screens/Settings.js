@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button } from 'react-native';
+import { Text, Button } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Storage from '../src/storage';
 import { LOCATIONS } from '../src/constants';
+
+import PageWrapper from './PageWrapper';
 
 const defaultTime = new Date();
 defaultTime.setHours(18, 0, 0, 0);
@@ -25,8 +27,7 @@ function Settings(props) {
     }, []);
 
     return (
-        <View>
-            <Text>Settings</Text>
+        <PageWrapper title="Settings">
             <Text>Select daily reminder time!</Text>
             <DateTimePicker
                 testID="dateTimePicker"
@@ -41,7 +42,7 @@ function Settings(props) {
                 title="Save"
                 onPress={onSave}
             />
-        </View>
+        </PageWrapper>
     );
 }
 

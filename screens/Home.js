@@ -1,26 +1,21 @@
-import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
+import React from 'react';
+import { Button } from 'react-native-elements';
 
-class Home extends Component {
-    constructor(props) {
-        super(props);
-    }
+import PageWrapper from './PageWrapper';
 
-    render() {
-        return (
-            <View>
-                <Text>VapeAware</Text>
-                <Button
-                    title="Record Session"
-                    onPress={this.props.setPage.recordSession}
-                />
-                <Button
-                    title="Settings"
-                    onPress={this.props.setPage.settings}
-                />
-            </View>
-        );
-    }
+function Home(props) {
+    return (
+        <PageWrapper title="Home">
+            <Button
+                title="Record Session"
+                onPress={props.setPage.recordSession}
+            />
+            <Button
+                title="Settings"
+                onPress={props.setPage.settings}
+            />
+        </PageWrapper>
+    );
 }
 
 export default Home;

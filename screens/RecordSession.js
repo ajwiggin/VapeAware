@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, Button, Switch } from 'react-native';
+import { View, Switch } from 'react-native';
+import { Button, Text } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
+
+import PageWrapper from './PageWrapper';
 import Storage from '../src/storage';
 import { LOCATIONS } from '../src/constants';
 import Location from '../src/location';
@@ -72,8 +75,7 @@ class RecordSession extends Component {
             );
         }
         return (
-            <View>
-                <Text>Record Session</Text>
+            <PageWrapper title="Record Session">
                 <Text>Is this happening currently?</Text>
                 <Switch
                     value={this.state.isCurrent}
@@ -112,7 +114,7 @@ class RecordSession extends Component {
                     title="Cancel"
                     onPress={this.props.setPage.home}
                 />
-            </View>
+            </PageWrapper>
         );
     }
 }
