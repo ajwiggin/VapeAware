@@ -5,14 +5,19 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Storage from '../src/storage';
 import { LOCATIONS } from '../src/constants';
 
+// Create the default time as 6pm
 const defaultTime = new Date();
 defaultTime.setHours(18, 0, 0, 0);
 
 function Landing(props) {
+    // Create the state variable time and the function setTime, to change its value
     const [time, setTime] = useState(defaultTime);
 
+    // Listener function called when time selector changes
+    // Sets the state (time) to the selected time (or the previous state if selectedTime is null)
     const onChange = (_, selectedTime) => setTime(selectedTime || time);
 
+    // Button press handler, writes selected time to local storage
     const onClose = () => {
         Storage.local.write(LOCATIONS.SURVEYREMIDNER, time);
         props.onClose();

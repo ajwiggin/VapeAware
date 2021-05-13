@@ -3,6 +3,7 @@ import { Button } from 'react-native-elements';
 
 import PageWrapper from './PageWrapper';
 
+// React component represeting home page with two buttons
 function Home(props) {
     return (
         <PageWrapper>

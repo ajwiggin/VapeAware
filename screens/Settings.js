@@ -19,6 +19,8 @@ function Settings(props) {
 
     const onTimeChange = (_, selectedTime) => setTime(selectedTime || time);
 
+    // useEffect acts like componentDidMount; local survey is checked for a selected reminder time
+    // and then it is written into state
     useEffect(() => {
         Storage.local.read(LOCATIONS.SURVEYREMIDNER)
             .then(readTime => {

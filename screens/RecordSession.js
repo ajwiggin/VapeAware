@@ -12,6 +12,7 @@ import SessionSurvey from './SessionSurvey';
 class RecordSession extends Component {
     constructor(props) {
         super(props);
+        // Set default state to null
         this.state = {
             isCurrent: true,
             when: null,
@@ -22,11 +23,14 @@ class RecordSession extends Component {
         };
     }
 
+    // When the component mounts onto the DOM, retrieve the unique ID from storage
+    // Create a reference to the firebase storage location
     async componentDidMount() {
         const uniqueID = await Storage.secure.read(LOCATIONS.UNIQUEID) || await Storage.local.read(LOCATIONS.UNIQUEID);
         this.firebase = Storage.firebase(uniqueID);
     }
 
+    // If not current, a modal is shown that prompts the user to answer all the questions
     onContinue = async () => {
         if (!this.state.isCurrent && !(this.state.when && this.state.where)) {
             this.setState({ modalVisible: true });
@@ -36,15 +40,20 @@ class RecordSession extends Component {
     };
 
     onSurveySubmit = survey => {
+        // Removes showSurvey and modalVisible from state 
         let data = this.state;
         delete data.showSurvey;
         delete data.modalVisible;
 
+        // .when and .where are indicies of whenButtons and whereButtons
         data.when = this.whenButtons[data.when];
         data.where = this.whereButtons[data.where];
 
+        // if the participant answered the survey, it is added to data
         if (survey) data.survey = survey;
 
+        // if the participant indicated that the session is current, the Location module is used
+        // to access the participant's current location and then write it to firebase
         if (data.isCurrent) {
             Location.getCurrentPosition()
                 .then(location => {

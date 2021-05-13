@@ -73,6 +73,7 @@ class SessionSurvey extends Component {
     }
 }
 
+// Component that switches between being solid and being "outlined" when tapped
 function SelectableButton(props) {
     const [pressed, setPressed] = useState(false);
 
