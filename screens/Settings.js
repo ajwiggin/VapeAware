@@ -5,6 +5,7 @@ import Storage from '../src/storage';
 import { LOCATIONS } from '../src/constants';
 
 import PageWrapper from './PageWrapper';
+import Footer from './Footer';
 
 const defaultTime = new Date();
 defaultTime.setHours(18, 0, 0, 0);
@@ -38,9 +39,8 @@ function Settings(props) {
                 minuteInterval={15}
                 onChange={onTimeChange}
             />
-            <Button
-                title="Save"
-                onPress={onSave}
+            <Footer
+                rightButton={<Button title="Save" onPress={onSave} />}
             />
         </PageWrapper>
     );
