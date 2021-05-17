@@ -29,7 +29,7 @@ class RecordSession extends Component {
     }
 
     onContinue = async () => {
-        if (!this.state.isCurrent && !(this.state.when && this.state.where)) {
+        if (!this.state.isCurrent && (this.state.when === null || this.state.where === null)) {
             this.setState({ modalVisible: true });
             return;
         }
