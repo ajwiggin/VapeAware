@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { StyleSheet, SafeAreaView, Button } from 'react-native';
+import { ThemeProvider } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { v4 as uuid } from 'uuid';
 
 import Storage from './src/storage';
 import { PAGES, LOCATIONS } from './src/constants';
 import Notifications from './src/notifications';
+import theme from './styles/theme';
 
 import Landing from './screens/Landing';
 import Home from './screens/Home';
@@ -95,16 +97,20 @@ class App extends Component {
         dailySurvey: () => this.setState({ currentPage: PAGES.DAILYSURVEY })
     }
 
+    // colorScheme = useColorScheme();
+
     render() {
         return (
-            <SafeAreaView style={styles.container}>
-                <StatusBar style="auto" />
-                {this.state.hasVisited ? this.getCurrentPage() : (<Landing onClose={this.closeLanding} />)}
-                <Button
-                    title='Test Notification'
-                    onPress={this.testNotifs}
-                />
-            </SafeAreaView>
+            <ThemeWrapper>
+                <SafeAreaView style={styles.container}>
+                    <StatusBar style="auto" />
+                    {this.state.hasVisited ? this.getCurrentPage() : (<Landing onClose={this.closeLanding} />)}
+                    <Button
+                        title='Test Notification'
+                        onPress={this.testNotifs}
+                    />
+                </SafeAreaView>
+            </ThemeWrapper>
         );
     }
 }
@@ -119,5 +125,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     }
 });
+
+function ThemeWrapper(props) {
+    return (
+        <ThemeProvider theme={theme}>
+            {props.children}
+        </ThemeProvider>
+    );
+}
 
 export default App;

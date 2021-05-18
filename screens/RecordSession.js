@@ -8,6 +8,7 @@ import Storage from '../src/storage';
 import { LOCATIONS } from '../src/constants';
 import Location from '../src/location';
 import SessionSurvey from './SessionSurvey';
+import Footer from './Footer';
 
 class RecordSession extends Component {
     constructor(props) {
@@ -28,7 +29,7 @@ class RecordSession extends Component {
     }
 
     onContinue = async () => {
-        if (!this.state.isCurrent && !(this.state.when && this.state.where)) {
+        if (!this.state.isCurrent && (this.state.when === null || this.state.where === null)) {
             this.setState({ modalVisible: true });
             return;
         }
@@ -88,7 +89,7 @@ class RecordSession extends Component {
                     </View>
                 </Modal>
                 {!this.state.isCurrent &&
-                    <View>
+                    <>
                         <Text>What time did this event occur?</Text>
                         <ButtonGroup
                             onPress={when => this.setState({ when })}
@@ -101,15 +102,11 @@ class RecordSession extends Component {
                             selectedIndex={this.state.where}
                             buttons={this.whereButtons}
                         />
-                    </View>
+                    </>
                 }
-                <Button
-                    title="Save"
-                    onPress={this.onContinue}
-                />
-                <Button
-                    title="Cancel"
-                    onPress={this.props.setPage.home}
+                <Footer
+                    leftButton={<Button title="Cancel" onPress={this.props.setPage.home} />}
+                    rightButton={<Button title="Save" onPress={this.onContinue} />}
                 />
             </PageWrapper>
         );
