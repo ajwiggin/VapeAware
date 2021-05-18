@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
+import { ThemeProvider } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { v4 as uuid } from 'uuid';
 
 import Storage from './src/storage';
 import { PAGES, LOCATIONS } from './src/constants';
+import theme from './styles/theme';
 
 import Landing from './screens/Landing';
 import Home from './screens/Home';
@@ -61,12 +63,16 @@ class App extends Component {
         settings: () => this.setState({ currentPage: PAGES.SETTINGS })
     }
 
+    // colorScheme = useColorScheme();
+
     render() {
         return (
-            <SafeAreaView style={styles.container}>
-                <StatusBar style="auto" />
-                {this.state.hasVisited ? this.getCurrentPage() : (<Landing onClose={this.closeLanding} />)}
-            </SafeAreaView>
+            <ThemeWrapper>
+                <SafeAreaView style={styles.container}>
+                    <StatusBar style="auto" />
+                    {this.state.hasVisited ? this.getCurrentPage() : (<Landing onClose={this.closeLanding} />)}
+                </SafeAreaView>
+            </ThemeWrapper>
         );
     }
 }
@@ -81,5 +87,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     }
 });
+
+function ThemeWrapper(props) {
+    return (
+        <ThemeProvider theme={theme}>
+            {props.children}
+        </ThemeProvider>
+    );
+}
 
 export default App;
