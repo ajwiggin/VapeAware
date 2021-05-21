@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { Text, Button } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Storage from '../src/storage';
-import { LOCATIONS } from '../src/constants';
 
 import PageWrapper from './PageWrapper';
 import Footer from './Footer';
+
+import Storage from '../src/storage';
+import { LOCATIONS } from '../src/constants';
 
 const defaultTime = new Date();
 defaultTime.setHours(18, 0, 0, 0);
@@ -18,12 +20,10 @@ function Settings(props) {
         props.setPage.home();
     };
 
-    const onTimeChange = (_, selectedTime) => setTime(selectedTime || time);
-
     useEffect(() => {
         Storage.local.read(LOCATIONS.SURVEYREMIDNER)
             .then(readTime => {
-                setTime(new Date(readTime));
+                if (readTime) setTime(new Date(readTime));
             });
     }, []);
 
@@ -31,13 +31,12 @@ function Settings(props) {
         <PageWrapper title="Settings">
             <Text>Select daily reminder time!</Text>
             <DateTimePicker
-                testID="dateTimePicker"
                 value={time}
                 mode="time"
                 is24Hour={false}
-                display="default"
                 minuteInterval={15}
-                onChange={onTimeChange}
+                onChange={(_, selectedTime) => setTime(selectedTime || time)}
+                style={styles.TimePicker}
             />
             <Footer
                 rightButton={<Button title="Save" onPress={onSave} />}
@@ -45,5 +44,11 @@ function Settings(props) {
         </PageWrapper>
     );
 }
+
+const styles = StyleSheet.create({
+    TimePicker: {
+        width: 100
+    }
+});
 
 export default Settings;
