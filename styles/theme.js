@@ -24,9 +24,24 @@ export const colors = {
 };
 
 const theme = {
+    Text: {
+        style: {
+            fontSize: 20
+        }
+    },
+    Input: {
+        containerStyle: {
+            paddingHorizontal: 0
+        }
+    },
     Button: {
         buttonStyle: {
-            backgroundColor: colors.blue.light,
+            backgroundColor: colors.blue.light
+        }
+    },
+    ButtonGroup: {
+        containerStyle: {
+            marginHorizontal: 0
         }
     }
 };
