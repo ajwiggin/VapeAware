@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { ButtonGroup, Button, Text, Chip, Input } from 'react-native-elements';
 import Footer from './Footer';
 import PageWrapper from './PageWrapper';
+import Question from './Question';
 
 class SessionSurvey extends Component {
     constructor(props) {
@@ -67,33 +68,39 @@ class SessionSurvey extends Component {
     render() {
         return (
             <PageWrapper title="Optional Survey">
-                <Text>How do you feel?</Text>
-                <View style={styles.feelingsContainer}>
-                    {this.createFeelingsButtons(this.feelings)}
-                    <View style={styles.feelingsRow}>
-                        <Input
-                            style={styles.feelingInput}
-                            placeholder="Other"
-                            onChangeText={otherFeeling => {
-                                this.setState({ otherFeeling });
-                            }}
-                        />
+                <Question>
+                    <Text>How do you feel?</Text>
+                    <View style={styles.feelingsContainer}>
+                        {this.createFeelingsButtons(this.feelings)}
+                        <View style={styles.feelingsRow}>
+                            <Input
+                                style={styles.feelingInput}
+                                placeholder="Other"
+                                onChangeText={otherFeeling => {
+                                    this.setState({ otherFeeling });
+                                }}
+                            />
+                        </View>
                     </View>
-                </View>
+                </Question>
 
-                <Text>What is your current stress level?</Text>
-                <ButtonGroup
-                    onPress={stressLevel => this.setState({ stressLevel })}
-                    selectedIndex={this.state.stressLevel}
-                    buttons={[0, 1, 2, 3, 4, 5]}
-                />
+                <Question>
+                    <Text>What is your current stress level?</Text>
+                    <ButtonGroup
+                        onPress={stressLevel => this.setState({ stressLevel })}
+                        selectedIndex={this.state.stressLevel}
+                        buttons={[0, 1, 2, 3, 4, 5]}
+                    />
+                </Question>
 
-                <Text>Are you alone or with others?</Text>
-                <ButtonGroup
-                    onPress={alone => this.setState({ alone })}
-                    selectedIndex={this.state.alone}
-                    buttons={this.aloneButtons}
-                />
+                <Question>
+                    <Text>Are you alone or with others?</Text>
+                    <ButtonGroup
+                        onPress={alone => this.setState({ alone })}
+                        selectedIndex={this.state.alone}
+                        buttons={this.aloneButtons}
+                    />
+                </Question>
 
                 <Footer
                     leftButton={<Button title="Skip" onPress={() => this.onComplete(false)} />}

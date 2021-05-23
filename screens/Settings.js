@@ -4,6 +4,7 @@ import { Text, Button } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import PageWrapper from './PageWrapper';
+import Question from './Question';
 import Footer from './Footer';
 
 import Storage from '../src/storage';
@@ -32,15 +33,17 @@ function Settings(props) {
 
     return (
         <PageWrapper title="Settings">
-            <Text>Select daily reminder time!</Text>
-            <DateTimePicker
-                value={time}
-                mode="time"
-                is24Hour={false}
-                minuteInterval={15}
-                onChange={(_, selectedTime) => setTime(selectedTime || time)}
-                style={styles.TimePicker}
-            />
+            <Question horizontal>
+                <Text>Select daily reminder time!</Text>
+                <DateTimePicker
+                    value={time}
+                    mode="time"
+                    is24Hour={false}
+                    minuteInterval={15}
+                    onChange={(_, selectedTime) => setTime(selectedTime || time)}
+                    style={styles.TimePicker}
+                />
+            </Question>
             <Footer
                 rightButton={<Button title="Save" onPress={onSave} />}
             />

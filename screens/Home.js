@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Button, Text } from 'react-native-elements';
+import { Button, Text, Icon } from 'react-native-elements';
 import notifications from '../src/notifications';
 import Footer from './Footer';
 
@@ -25,14 +25,9 @@ function Home(props) {
                     <Text style={styles.surveyText}>Available until {formatAMPM(new Date(props.survey.expiration))}</Text>
                 </View>
             }
-            {__DEV__ &&
-                <Button
-                    title="Test Notification"
-                    onPress={sendNotification}
-                    style={styles.button}
-                />}
             <Footer
-                centerButton={<Button title="Settings" onPress={props.setPage.settings} />}
+                leftButton={<Icon name="settings" type="material" onPress={props.setPage.settings} size={45} containerStyle={styles.settingsButton} />}
+                rightButton={__DEV__ && <Icon name="notifications" type="material" onPress={sendNotification} size={45} containerStyle={styles.notificationButton} />}
             />
         </PageWrapper>
     );
@@ -48,6 +43,14 @@ const styles = StyleSheet.create({
     },
     surveyText: {
         fontSize: 15
+    },
+    settingsButton: {
+        marginLeft: 10,
+        alignItems: 'flex-start'
+    },
+    notificationButton: {
+        marginRight: 10,
+        alignItems: 'flex-end'
     }
 });
 

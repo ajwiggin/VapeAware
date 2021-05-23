@@ -9,6 +9,7 @@ import { LOCATIONS } from '../src/constants';
 import Location from '../src/location';
 import SessionSurvey from './SessionSurvey';
 import Footer from './Footer';
+import Question from './Question';
 
 class RecordSession extends Component {
     constructor(props) {
@@ -71,15 +72,17 @@ class RecordSession extends Component {
         }
         return (
             <PageWrapper title="Record Session">
-                <Text>Is this happening currently?</Text>
-                <Switch
-                    value={this.state.isCurrent}
-                    onValueChange={() => this.setState({ isCurrent: !this.state.isCurrent })}
-                />
+                <Question horizontal>
+                    <Text>Is this happening currently?</Text>
+                    <Switch
+                        value={this.state.isCurrent}
+                        onValueChange={() => this.setState({ isCurrent: !this.state.isCurrent })}
+                    />
+                </Question>
+
                 <Modal
                     isVisible={this.state.modalVisible}
                     style={styles.modalContainer}
-                    backdropOpacity={0}
                     onBackdropPress={() => this.setState({ modalVisible: false })}
                     swipeDirection={['down', 'up']}
                     onSwipeComplete={() => this.setState({ modalVisible: false })}
@@ -88,20 +91,26 @@ class RecordSession extends Component {
                         <Text>Please answer all required questions before saving the session</Text>
                     </View>
                 </Modal>
+
                 {!this.state.isCurrent &&
                     <>
-                        <Text>What time did this event occur?</Text>
-                        <ButtonGroup
-                            onPress={when => this.setState({ when })}
-                            selectedIndex={this.state.when}
-                            buttons={this.whenButtons}
-                        />
-                        <Text>Where were you when the event occured?</Text>
-                        <ButtonGroup
-                            onPress={where => this.setState({ where })}
-                            selectedIndex={this.state.where}
-                            buttons={this.whereButtons}
-                        />
+                        <Question>
+                            <Text>What time did this event occur?</Text>
+                            <ButtonGroup
+                                onPress={when => this.setState({ when })}
+                                selectedIndex={this.state.when}
+                                buttons={this.whenButtons}
+                            />
+                        </Question>
+
+                        <Question>
+                            <Text>Where were you when the event occured?</Text>
+                            <ButtonGroup
+                                onPress={where => this.setState({ where })}
+                                selectedIndex={this.state.where}
+                                buttons={this.whereButtons}
+                            />
+                        </Question>
                     </>
                 }
                 <Footer
@@ -121,10 +130,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modal: {
-        margin: 20,
+        margin: 10,
         backgroundColor: 'white',
         borderRadius: 20,
-        padding: 35,
+        padding: 20,
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
