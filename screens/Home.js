@@ -2,9 +2,9 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button, Text, Icon } from 'react-native-elements';
 import notifications from '../src/notifications';
-import Footer from './Footer';
+import Footer from '../components/Footer';
 
-import PageWrapper from './PageWrapper';
+import PageWrapper from '../components/PageWrapper';
 
 function Home(props) {
     const sendNotification = () => notifications.send('VapeAware', 'Test Notification!');

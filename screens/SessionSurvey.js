@@ -1,9 +1,9 @@
 import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ButtonGroup, Button, Text, Chip, Input } from 'react-native-elements';
-import Footer from './Footer';
-import PageWrapper from './PageWrapper';
-import Question from './Question';
+import Footer from '../components/Footer';
+import PageWrapper from '../components/PageWrapper';
+import Question from '../components/Question';
 
 class SessionSurvey extends Component {
     constructor(props) {

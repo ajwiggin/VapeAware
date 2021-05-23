@@ -3,13 +3,13 @@ import { View, Switch, StyleSheet } from 'react-native';
 import { Button, Text, ButtonGroup } from 'react-native-elements';
 import Modal from 'react-native-modal';
 
-import PageWrapper from './PageWrapper';
+import PageWrapper from '../components/PageWrapper';
 import Storage from '../src/storage';
 import { LOCATIONS } from '../src/constants';
 import Location from '../src/location';
 import SessionSurvey from './SessionSurvey';
-import Footer from './Footer';
-import Question from './Question';
+import Footer from '../components/Footer';
+import Question from '../components/Question';
 
 class RecordSession extends Component {
     constructor(props) {

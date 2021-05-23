@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 import { Text, Button } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import PageWrapper from './PageWrapper';
-import Footer from './Footer';
+import PageWrapper from '../components/PageWrapper';
+import Footer from '../components/Footer';
 
 import Storage from '../src/storage';
 import { LOCATIONS } from '../src/constants';

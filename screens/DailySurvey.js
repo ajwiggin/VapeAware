@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { ButtonGroup, Button, Input, Text } from 'react-native-elements';
 
-import PageWrapper from './PageWrapper';
-import Question from './Question';
-import Footer from './Footer';
+import PageWrapper from '../components/PageWrapper';
+import Question from '../components/Question';
+import Footer from '../components/Footer';
 
 class DailySurvey extends Component {
     constructor(props) {
