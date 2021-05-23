@@ -8,6 +8,7 @@ import Footer from './Footer';
 
 import Storage from '../src/storage';
 import { LOCATIONS } from '../src/constants';
+import Notifications from '../src/notifications';
 
 const defaultTime = new Date();
 defaultTime.setHours(18, 0, 0, 0);
@@ -16,12 +17,14 @@ function Settings(props) {
     const [time, setTime] = useState(defaultTime);
 
     const onSave = () => {
-        Storage.local.write(LOCATIONS.SURVEYREMIDNER, time);
+        Storage.local.write(LOCATIONS.REMINDERTIME, time.getTime());
+        Notifications.cancelScheduledSurvey()
+            .then(() => Notifications.scheduleDailySurvey(time.getTime()));
         props.setPage.home();
     };
 
     useEffect(() => {
-        Storage.local.read(LOCATIONS.SURVEYREMIDNER)
+        Storage.local.read(LOCATIONS.REMINDERTIME)
             .then(readTime => {
                 if (readTime) setTime(new Date(readTime));
             });

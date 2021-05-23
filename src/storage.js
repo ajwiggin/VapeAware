@@ -47,11 +47,13 @@ export const local = {
      * @param {string} key Location of item in local storage
      * @returns {?(string|Object)} string or Object from local storage or null if the key is does not exist
      */
-    read: async (key) => {
+    read: (key) => {
         try {
-            const val = await AsyncStorage.getItem(key);
-            try { return JSON.parse(val); }
-            catch (e) { return val; }
+            return AsyncStorage.getItem(key)
+                .then(val => {
+                    try { return JSON.parse(val); }
+                    catch (e) { return val; }
+                });
         } catch (e) {
             console.error(`Error retieving data: ${e}`);
         }

@@ -6,6 +6,7 @@
     "owner": "ajwiggin",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "githubUrl": "https://github.com/ajwiggin/VapeAware",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -18,7 +19,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.ajwiggin.VapeAware"
     },
     "android": {
       "adaptiveIcon": {

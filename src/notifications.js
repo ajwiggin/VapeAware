@@ -18,7 +18,7 @@ Notifications.setNotificationHandler({
  * @param {string} body Push notification body
  * @param {{}} [data={}] Data to pass to the app when opening the push notification
  */
-export async function send(title, body, data={}) {
+export async function send(title, body, data = {}) {
     let expoPushToken = await Storage.local.read(LOCATIONS.PUSHTOKEN) || await register();
 
     const message = {
@@ -83,4 +83,44 @@ export function removeListener(listener) {
     Notifications.removeNotificationSubscription(listener);
 }
 
-export default { register, send, addListener, removeListener };
+export function scheduleDailySurvey(time) {
+    const dateTime = new Date(time);
+    Notifications.scheduleNotificationAsync({
+        content: {
+            title: 'VapeAware Optional Survey',
+            body: 'Its time to fill our your daily survey!'
+        },
+        trigger: {
+            hour: dateTime.getHours(),
+            minute: dateTime.getMinutes(),
+            repeats: true
+        }
+    });
+
+    const threeHoursLater = new Date(time);
+    threeHoursLater.setTime(time + (3*60*60*1000));
+    Notifications.scheduleNotificationAsync({
+        content: {
+            title: 'VapeAware Optional Survey',
+            body: 'Your daily survey will expire in 1 hour!'
+        },
+        trigger: {
+            hour: threeHoursLater.getHours(),
+            minute: threeHoursLater.getMinutes(),
+            repeats: true
+        }
+    });
+}
+
+export function cancelScheduledSurvey() {
+    return Notifications.cancelAllScheduledNotificationsAsync();
+}
+
+export function getNextOccurrance(date) {
+    const now = new Date();
+    while (now - date > 0)
+        date.setDate(date.getDate() + 1);
+    return date;
+}
+
+export default { register, send, addListener, removeListener, scheduleDailySurvey, cancelScheduledSurvey, getNextOccurrance };

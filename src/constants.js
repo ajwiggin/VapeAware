@@ -2,7 +2,7 @@
 export const LOCATIONS = {
     HASVISITED: 'hasVisited',
     PUSHTOKEN: 'pushToken',
-    SURVEYREMIDNER: 'surveyReminder',
+    REMINDERTIME: 'reminderTime',
     LOCATIONACCESS: 'locationAccess',
     UNIQUEID: 'vapeAwareUniqueID',
     DAILYSURVEY: 'dailySurvey'

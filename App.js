@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { StyleSheet, SafeAreaView, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import { ThemeProvider } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { v4 as uuid } from 'uuid';
@@ -15,104 +15,89 @@ import RecordSession from './screens/RecordSession';
 import Settings from './screens/Settings';
 import DailySurvey from './screens/DailySurvey';
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-        // Remove all previous storage if opening in development
+function App() {
+    const [currentPage, setCurrentPage] = useState(PAGES.HOME);
+    const [hasVisited, setHasVisited] = useState(false);
+    const [dailySurvey, setDailySurvey] = useState(null);
+    const [nextSurvey, setNextSurvey] = useState(null);
+    const [uniqueID, setUniqueID] = useState(null);
+    const notificationResponseListener = React.createRef();
+
+    useEffect(() => {
         if (__DEV__) Storage.local.remove(Object.values(LOCATIONS));
-        this.state = {
-            currentPage: PAGES.HOME,
-            hasVisited: false,
-            notification: null,
-            incompleteDailySurvey: false
-        };
-        this.notificationResponseListener = React.createRef();
-        this.saveDailySurvey = this.saveDailySurvey.bind(this);
-        this.submitDailySurvey = this.submitDailySurvey.bind(this);
-    }
 
-    async componentDidMount() {
         Storage.local.read(LOCATIONS.HASVISITED)
-            .then(hasVisited => {
-                this.setHasVisited(hasVisited || false);
+            .then(newHasVisited => setHasVisited(newHasVisited || false));
+
+        Promise.all([
+            Storage.secure.read(LOCATIONS.UNIQUEID),
+            Storage.local.read(LOCATIONS.UNIQUEID)
+        ])
+            .then(([secure, local]) => {
+                let newUniqueID = secure || local;
+                if (!newUniqueID) {
+                    newUniqueID = uuid();
+                    Storage.secure.isAvailable()
+                        .then(available => {
+                            if (available) Storage.secure.write(LOCATIONS.UNIQUEID, uniqueID);
+                            else Storage.local.write(LOCATIONS.UNIQUEID, uniqueID);
+                        });
+                }
+                setUniqueID(newUniqueID);
             });
-        this.uniqueID = await Storage.secure.read(LOCATIONS.UNIQUEID) || await Storage.local.read(LOCATIONS.UNIQUEID);
-        if (!this.uniqueID) {
-            this.uniqueID = uuid();
-            Storage.secure.isAvailable()
-                .then(available => {
-                    if (available) Storage.secure.write(LOCATIONS.UNIQUEID, this.uniqueID);
-                    else Storage.local.write(LOCATIONS.UNIQUEID, this.uniqueID);
-                });
-        }
-        console.log(this.uniqueID);
-        this.setState({ uniqueID: this.uniqueID });
-        this.notificationResponseListener.current = Notifications.addListener(response => {
-            console.log(`Notification response recieved: ${JSON.stringify(response)}`);
-            this.setPage.dailySurvey();
-        });
-    }
 
-    componentWillUnmount() {
-        Notifications.removeListener(this.notificationResponseListener.current);
-    }
+        notificationResponseListener.current = Notifications.addListener(() => setPage.dailySurvey());
+        return () => {
+            Notifications.removeListener(notificationResponseListener.current);
+            Notifications.cancelScheduledSurvey();
+        };
+    }, []);
 
-    setHasVisited = (hasVisited) => this.setState({ hasVisited });
-
-    closeLanding = () => {
+    const closeLanding = time => {
         Storage.local.write(LOCATIONS.HASVISITED, true);
-        this.setHasVisited(true);
-    }
+        setHasVisited(true);
+        setNextSurvey(time);
+        Notifications.scheduleDailySurvey(time);
+        // .then(id => Storage.local.write(LOCATIONS.DAILYSURVEYPUSHID, id));
+    };
 
-    getCurrentPage = () => {
-        switch (this.state.currentPage) {
-            case PAGES.HOME: return <Home setPage={this.setPage} hasSurvey={this.state.incompleteDailySurvey} />;
-            case PAGES.RECORDSESSION: return <RecordSession setPage={this.setPage} />;
-            case PAGES.SETTINGS: return <Settings setPage={this.setPage} />;
-            case PAGES.DAILYSURVEY: return <DailySurvey setPage={this.setPage} save={this.saveDailySurvey} submit={this.submitDailySurvey} />;
+    const getPageComponent = () => {
+        switch (currentPage) {
+            case PAGES.HOME: return <Home setPage={setPage} survey={dailySurvey} />;
+            case PAGES.RECORDSESSION: return <RecordSession setPage={setPage} />;
+            case PAGES.SETTINGS: return <Settings setPage={setPage} />;
+            case PAGES.DAILYSURVEY: return <DailySurvey setPage={setPage} data={dailySurvey} startTime={nextSurvey} save={saveDailySurvey} submit={submitDailySurvey} />;
         }
-    }
+    };
 
-    saveDailySurvey = (data) => {
+    const saveDailySurvey = data => {
         // write to local storage
         Storage.local.write(LOCATIONS.DAILYSURVEY, data);
-        this.setState({ incompleteDailySurvey: true });
-        console.log(data);
-    }
+        setDailySurvey(data);
+        setCurrentPage(PAGES.HOME);
+    };
 
-    submitDailySurvey = (data) => {
-        // write to firebase
-        Storage.firebase(this.uniqueID).recordSurvey(data);
-        console.log(data);
-    }
+    const submitDailySurvey = data => {
+        Storage.firebase(uniqueID).recordSurvey(data);
+        setDailySurvey(null);
+        setCurrentPage(PAGES.HOME);
+    };
 
-    testNotifs = async () => {
-        Notifications.send('Title', 'Body!');
-    }
+    const setPage = {
+        home: () => setCurrentPage(PAGES.HOME),
+        recordSession: () => setCurrentPage(PAGES.RECORDSESSION),
+        settings: () => setCurrentPage(PAGES.SETTINGS),
+        dailySurvey: () => setCurrentPage(PAGES.DAILYSURVEY)
+    };
 
-    setPage = {
-        home: () => this.setState({ currentPage: PAGES.HOME }),
-        recordSession: () => this.setState({ currentPage: PAGES.RECORDSESSION }),
-        settings: () => this.setState({ currentPage: PAGES.SETTINGS }),
-        dailySurvey: () => this.setState({ currentPage: PAGES.DAILYSURVEY })
-    }
-
-    // colorScheme = useColorScheme();
-
-    render() {
-        return (
-            <ThemeWrapper>
-                <SafeAreaView style={styles.container}>
-                    <StatusBar style="auto" />
-                    {this.state.hasVisited ? this.getCurrentPage() : (<Landing onClose={this.closeLanding} />)}
-                    <Button
-                        title='Test Notification'
-                        onPress={this.testNotifs}
-                    />
-                </SafeAreaView>
-            </ThemeWrapper>
-        );
-    }
+    return (
+        <ThemeProvider theme={theme}>
+            <SafeAreaView style={styles.container}>
+                <StatusBar style="auto" />
+                {hasVisited ? getPageComponent() : (<Landing onClose={closeLanding} />)}
+            </SafeAreaView>
+        </ThemeProvider>
+    );
 }
 
 const containerColor = '#fff';
@@ -125,13 +110,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     }
 });
-
-function ThemeWrapper(props) {
-    return (
-        <ThemeProvider theme={theme}>
-            {props.children}
-        </ThemeProvider>
-    );
-}
 
 export default App;

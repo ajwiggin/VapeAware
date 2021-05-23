@@ -4,8 +4,11 @@ import { Text, Button } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import PageWrapper from './PageWrapper';
+import Footer from './Footer';
+
 import Storage from '../src/storage';
 import { LOCATIONS } from '../src/constants';
+import { getNextOccurrance } from '../src/notifications';
 
 const defaultTime = new Date();
 defaultTime.setHours(18, 0, 0, 0);
@@ -14,8 +17,9 @@ function Landing(props) {
     const [time, setTime] = useState(defaultTime);
 
     const onClose = () => {
-        Storage.local.write(LOCATIONS.SURVEYREMIDNER, time);
-        props.onClose();
+        const nextOccurance = getNextOccurrance(time).getTime();
+        Storage.local.write(LOCATIONS.REMINDERTIME, nextOccurance);
+        props.onClose(nextOccurance);
     };
 
     return (
@@ -31,9 +35,8 @@ function Landing(props) {
                 onChange={(_, selectedTime) => setTime(selectedTime || time)}
                 style={styles.TimePicker}
             />
-            <Button
-                title="Continue"
-                onPress={onClose}
+            <Footer
+                rightButton={<Button title="Continue" onPress={onClose} />}
             />
         </PageWrapper>
     );
